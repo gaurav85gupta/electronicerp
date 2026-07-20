@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'https://electronicerp-1.onrender.com';
 
 const userNameEl = document.getElementById('user-name');
 const userRoleEl = document.getElementById('user-role');
