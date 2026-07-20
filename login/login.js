@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'https://electronicerp-1.onrender.com';
 const REMEMBERED_USERNAME_KEY = 'erp_remembered_username';
 
 const form = document.getElementById('login-form');
