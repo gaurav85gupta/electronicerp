@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Electronics ERP — Product Master</title>
+  <link rel="stylesheet" href="../dashboard/dashboard.css" />
+  <link rel="stylesheet" href="../master-data/master-data.css" />
+  <link rel="stylesheet" href="product-master.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="header-left">
+        <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="brand">
+          <div class="brand-logo">EE</div>
+          <span class="brand-name">Electronics ERP</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <span id="current-date" class="current-date"></span>
+        <div class="user-info">
+          <div class="user-details">
+            <span id="user-name" class="user-name">—</span>
+            <span id="user-role" class="user-role">—</span>
+          </div>
+          <div class="user-avatar" id="user-avatar">—</div>
+        </div>
+        <button id="logout-button" class="logout-button">Logout</button>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+          <a href="../dashboard/dashboard.html" class="nav-item" data-nav="dashboard">
+            <span class="nav-icon" aria-hidden="true">▦</span>
+            <span class="nav-label">Dashboard</span>
+          </a>
+          <a href="../inventory/inventory.html" class="nav-item" data-nav="inventory">
+            <span class="nav-icon" aria-hidden="true">▢</span>
+            <span class="nav-label">Inventory</span>
+          </a>
+          <a href="../purchase/purchase.html" class="nav-item" data-nav="purchase">
+            <span class="nav-icon" aria-hidden="true">▤</span>
+            <span class="nav-label">Purchase</span>
+          </a>
+          <a href="../billing/billing.html" class="nav-item" data-nav="billing">
+            <span class="nav-icon" aria-hidden="true">▥</span>
+            <span class="nav-label">Billing (POS)</span>
+          </a>
+          <a href="../customers/customers.html" class="nav-item" data-nav="customers">
+            <span class="nav-icon" aria-hidden="true">◔</span>
+            <span class="nav-label">Customers</span>
+          </a>
+          <a href="../master-data/master-data.html" class="nav-item" data-nav="master-data">
+            <span class="nav-icon" aria-hidden="true">◑</span>
+            <span class="nav-label">Master Data</span>
+          </a>
+          <a href="product-master.html" class="nav-item active" data-nav="product-master">
+            <span class="nav-icon" aria-hidden="true">▧</span>
+            <span class="nav-label">Product Master</span>
+          </a>
+          <a href="../reports/reports.html" class="nav-item" data-nav="reports">
+            <span class="nav-icon" aria-hidden="true">▧</span>
+            <span class="nav-label">Reports</span>
+          </a>
+          <a href="../settings/settings.html" class="nav-item" data-nav="settings">
+            <span class="nav-icon" aria-hidden="true">⚙</span>
+            <span class="nav-label">Settings</span>
+          </a>
+        </nav>
+
+        <button id="sidebar-logout" class="sidebar-logout">
+          <span class="nav-icon" aria-hidden="true">⏻</span>
+          <span class="nav-label">Logout</span>
+        </button>
+      </aside>
+
+      <main class="main-content">
+        <div class="content-header">
+          <h1 class="page-title">Product Master</h1>
+          <p class="page-subtitle">Manage every product sold in your store.</p>
+        </div>
+
+        <section class="master-panel">
+          <div class="panel-toolbar">
+            <div class="search-box">
+              <span class="search-icon" aria-hidden="true">⌕</span>
+              <input type="text" id="search-input" placeholder="Search by name, SKU, or barcode..." />
+            </div>
+            <div class="toolbar-actions">
+              <select id="category-filter" class="status-filter">
+                <option value="">All Categories</option>
+              </select>
+              <select id="brand-filter" class="status-filter">
+                <option value="">All Brands</option>
+              </select>
+              <select id="status-filter" class="status-filter">
+                <option value="">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+              <button type="button" id="add-button" class="add-button">+ Add Product</button>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="data-table" id="data-table">
+              <thead>
+                <tr>
+                  <th>Product Name</th>
+                  <th>SKU</th>
+                  <th>Brand</th>
+                  <th>Category</th>
+                  <th>Selling Price</th>
+                  <th>GST</th>
+                  <th>Warranty</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="table-body"></tbody>
+            </table>
+
+            <div class="table-state" id="loading-state" hidden>
+              <p>Loading products...</p>
+            </div>
+
+            <div class="table-state" id="empty-state" hidden>
+              <p id="empty-state-text">No products found. Click "Add Product" to create one.</p>
+            </div>
+          </div>
+
+          <div class="pagination-bar" id="pagination-bar" hidden>
+            <span class="pagination-info" id="pagination-info"></span>
+            <div class="pagination-controls">
+              <button type="button" id="prev-page" class="pagination-btn">Previous</button>
+              <span class="pagination-current" id="pagination-current"></span>
+              <button type="button" id="next-page" class="pagination-btn">Next</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add/Edit Product Modal -->
+  <div class="modal-overlay" id="form-modal-overlay" hidden>
+    <div class="modal-dialog modal-dialog-large" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">Add Product</h2>
+        <button type="button" class="modal-close" id="modal-close" aria-label="Close">✕</button>
+      </div>
+      <form id="product-form" class="modal-form" novalidate>
+        <div class="modal-body" id="modal-body">
+
+          <div class="form-section">
+            <h3 class="form-section-title">Basic Information</h3>
+            <div class="form-grid">
+              <div class="field-group">
+                <label for="field-productName">Product Name <span class="required-mark">*</span></label>
+                <input type="text" id="field-productName" name="productName" maxlength="150" />
+                <span class="field-error-text" id="error-productName"></span>
+              </div>
+              <div class="field-group">
+                <label for="field-sku">Product Code / SKU <span class="required-mark">*</span></label>
+                <input type="text" id="field-sku" name="sku" maxlength="50" />
+                <span class="field-error-text" id="error-sku"></span>
+              </div>
+              <div class="field-group">
+                <label for="field-barcode">Barcode</label>
+                <input type="text" id="field-barcode" name="barcode" maxlength="50" />
+                <span class="field-error-text" id="error-barcode"></span>
+              </div>
+              <div class="field-group">
+                <label for="field-category">Category <span class="required-mark">*</span></label>
+                <select id="field-category" name="category"></select>
+                <span class="field-error-text" id="error-category"></span>
+              </div>
+              <div class="field-group">
+                <label for="field-brand">Brand <span class="required-mark">*</span></label>
+                <select id="field-brand" name="brand"></select>
+                <span class="field-error-text" id="error-brand"></span>
+              </div>
+              <div class="field-group">
+                <label for="field-unit">Unit <span class="required-mark">*</span></label>
+                <select id="field-unit" name="unit"></select>
+                <span class="field-error-text" id="error-unit"></span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label for="field-description">Description</label>
+              <textarea id="field-description" name="description" rows="2" maxlength="1000"></textarea>
+              <span class="field-error-text" id="error-description"></span>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 class="form-section-title">Pricing</h3>
+            <div class="form-grid">
+              <div class="field-group">
+                <label for="field-purchasePrice">Purchase Price</label>
+                <input type="number" id="field-purchasePrice" name="purchasePrice" min="0" step="0.01" />
+                <span class="field-error-text" id="error-purchasePrice"></span>
+              </div>
+              <div class="field-group">
+                <label for="field-sellingPrice">Selling Price</label>
+                <input type="number" id="field-sellingPrice" name="sellingPrice" min="0" step="0.01" />
+                <span class="field-error-text" id="error-sellingPrice"></span>
+              </div>
+              <div class="field-group">
+                <label for="field-mrp">MRP</label>
+                <input type="number" id="field-mrp" name="mrp" min="0" step="0.01" />
+                <span class="field-error-text" id="error-mrp"></span>
+              </div>
+              <div class="field-group">
+                <label for="field-gst">GST <span class="required-mark">*</span></label>
+                <select id="field-gst" name="gst"></select>
+                <span class="field-error-text" id="error-gst"></span>
+              </div>
+              <div class="field-group">
+                <label for="field-discountAllowed">Discount Allowed</label>
+                <select id="field-discountAllowed" name="discountAllowed">
+                  <option value="false">No</option>
+                  <option value="true">Yes</option>
+                </select>
+                <span class="field-error-text" id="error-discountAllowed"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 class="form-section-title">Stock Configuration</h3>
+            <p class="form-section-hint">Configuration only — no stock quantity is tracked in this module.</p>
+            <div class="form-grid">
+              <div class="field-group">
+                <label for="field-minStockAlert">Minimum Stock Alert</label>
+                <input type="number" id="field-minStockAlert" name="minStockAlert" min="0" step="1" />
+                <span class="field-error-text" id="error-minStockAlert"></span>
+              </div>
+              <div class="field-group">
+                <label for="field-maxStock">Maximum Stock (Optional)</label>
+                <input type="number" id="field-maxStock" name="maxStock" min="0" step="1" />
+                <span class="field-error-text" id="error-maxStock"></span>
+              </div>
+              <div class="field-group">
+                <label for="field-reorderLevel">Reorder Level</label>
+                <input type="number" id="field-reorderLevel" name="reorderLevel" min="0" step="1" />
+                <span class="field-error-text" id="error-reorderLevel"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 class="form-section-title">Warranty Configuration</h3>
+            <div class="form-grid">
+              <div class="field-group">
+                <label for="field-warrantyAvailable">Warranty Available</label>
+                <select id="field-warrantyAvailable" name="warrantyAvailable">
+                  <option value="false">No</option>
+                  <option value="true">Yes</option>
+                </select>
+                <span class="field-error-text" id="error-warrantyAvailable"></span>
+              </div>
+              <div class="field-group" id="warranty-duration-group" hidden>
+                <label for="field-warrantyDuration">Warranty Duration</label>
+                <input type="number" id="field-warrantyDuration" name="warrantyDuration" min="0" step="1" />
+                <span class="field-error-text" id="error-warrantyDuration"></span>
+              </div>
+              <div class="field-group" id="warranty-unit-group" hidden>
+                <label for="field-warrantyUnit">Warranty Unit</label>
+                <select id="field-warrantyUnit" name="warrantyUnit">
+                  <option value="Days">Days</option>
+                  <option value="Months">Months</option>
+                  <option value="Years">Years</option>
+                </select>
+                <span class="field-error-text" id="error-warrantyUnit"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 class="form-section-title">Product Identification</h3>
+            <div class="form-grid">
+              <div class="field-group">
+                <label for="field-usesSerialNumber">Uses Serial Number</label>
+                <select id="field-usesSerialNumber" name="usesSerialNumber">
+                  <option value="false">No</option>
+                  <option value="true">Yes</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label for="field-usesImeiNumber">Uses IMEI Number</label>
+                <select id="field-usesImeiNumber" name="usesImeiNumber">
+                  <option value="false">No</option>
+                  <option value="true">Yes</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section" id="status-section" hidden>
+            <h3 class="form-section-title">Product Status</h3>
+            <div class="field-group">
+              <label for="field-status">Status</label>
+              <select id="field-status" name="status">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+        <p class="form-error" id="form-error" role="alert"></p>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="modal-cancel">Cancel</button>
+          <button type="submit" class="btn-primary" id="modal-submit">
+            <span id="modal-submit-text">Save</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirmation Dialog -->
+  <div class="modal-overlay" id="confirm-modal-overlay" hidden>
+    <div class="modal-dialog modal-dialog-small" role="alertdialog" aria-modal="true">
+      <div class="modal-header">
+        <h2 class="modal-title" id="confirm-title">Confirm Action</h2>
+      </div>
+      <div class="modal-body">
+        <p id="confirm-message">Are you sure?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="confirm-cancel">Cancel</button>
+        <button type="button" class="btn-primary" id="confirm-ok">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="../permissions.js"></script>
+  <script src="product-master.js"></script>
+</body>
+</html>

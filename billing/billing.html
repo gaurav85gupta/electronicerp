@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Electronics ERP — Billing</title>
+  <link rel="stylesheet" href="../dashboard/dashboard.css" />
+  <link rel="stylesheet" href="../master-data/master-data.css" />
+  <link rel="stylesheet" href="../product-master/product-master.css" />
+  <link rel="stylesheet" href="../purchase/purchase.css" />
+  <link rel="stylesheet" href="billing.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="header-left">
+        <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="brand">
+          <div class="brand-logo">EE</div>
+          <span class="brand-name">Electronics ERP</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <span id="current-date" class="current-date"></span>
+        <div class="user-info">
+          <div class="user-details">
+            <span id="user-name" class="user-name">—</span>
+            <span id="user-role" class="user-role">—</span>
+          </div>
+          <div class="user-avatar" id="user-avatar">—</div>
+        </div>
+        <button id="logout-button" class="logout-button">Logout</button>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+          <a href="../dashboard/dashboard.html" class="nav-item" data-nav="dashboard">
+            <span class="nav-icon" aria-hidden="true">▦</span>
+            <span class="nav-label">Dashboard</span>
+          </a>
+          <a href="../inventory/inventory.html" class="nav-item" data-nav="inventory">
+            <span class="nav-icon" aria-hidden="true">▢</span>
+            <span class="nav-label">Inventory</span>
+          </a>
+          <a href="../purchase/purchase.html" class="nav-item" data-nav="purchase">
+            <span class="nav-icon" aria-hidden="true">▤</span>
+            <span class="nav-label">Purchase</span>
+          </a>
+          <a href="billing.html" class="nav-item active" data-nav="billing">
+            <span class="nav-icon" aria-hidden="true">▥</span>
+            <span class="nav-label">Billing (POS)</span>
+          </a>
+          <a href="../customers/customers.html" class="nav-item" data-nav="customers">
+            <span class="nav-icon" aria-hidden="true">◔</span>
+            <span class="nav-label">Customers</span>
+          </a>
+          <a href="../master-data/master-data.html" class="nav-item" data-nav="master-data">
+            <span class="nav-icon" aria-hidden="true">◑</span>
+            <span class="nav-label">Master Data</span>
+          </a>
+          <a href="../product-master/product-master.html" class="nav-item" data-nav="product-master">
+            <span class="nav-icon" aria-hidden="true">▧</span>
+            <span class="nav-label">Product Master</span>
+          </a>
+          <a href="../reports/reports.html" class="nav-item" data-nav="reports">
+            <span class="nav-icon" aria-hidden="true">▧</span>
+            <span class="nav-label">Reports</span>
+          </a>
+          <a href="../settings/settings.html" class="nav-item" data-nav="settings">
+            <span class="nav-icon" aria-hidden="true">⚙</span>
+            <span class="nav-label">Settings</span>
+          </a>
+        </nav>
+
+        <button id="sidebar-logout" class="sidebar-logout">
+          <span class="nav-icon" aria-hidden="true">⏻</span>
+          <span class="nav-label">Logout</span>
+        </button>
+      </aside>
+
+      <main class="main-content">
+        <div class="content-header">
+          <h1 class="page-title">Billing (POS)</h1>
+          <p class="page-subtitle">Create sales bills, manage drafts, and finalize customer transactions.</p>
+        </div>
+
+        <section class="master-panel">
+          <div class="panel-toolbar">
+            <div class="search-box">
+              <span class="search-icon" aria-hidden="true">⌕</span>
+              <input type="text" id="search-input" placeholder="Search by bill #, customer name, or mobile..." />
+            </div>
+            <div class="toolbar-actions">
+              <select id="payment-mode-filter" class="status-filter">
+                <option value="">All Payment Modes</option>
+              </select>
+              <select id="status-filter" class="status-filter">
+                <option value="">All Status</option>
+                <option value="Draft">Draft</option>
+                <option value="Finalized">Finalized</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+              <input type="date" id="date-from-filter" class="status-filter" title="From date" />
+              <input type="date" id="date-to-filter" class="status-filter" title="To date" />
+              <button type="button" id="add-button" class="add-button">+ New Bill</button>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="data-table" id="data-table">
+              <thead>
+                <tr>
+                  <th>Bill Number</th>
+                  <th>Date</th>
+                  <th>Customer</th>
+                  <th>Total</th>
+                  <th>Payment Mode</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="table-body"></tbody>
+            </table>
+
+            <div class="table-state" id="loading-state" hidden>
+              <p>Loading bills...</p>
+            </div>
+
+            <div class="table-state" id="empty-state" hidden>
+              <p id="empty-state-text">No bills found. Click "New Bill" to create one.</p>
+            </div>
+          </div>
+
+          <div class="pagination-bar" id="pagination-bar" hidden>
+            <span class="pagination-info" id="pagination-info"></span>
+            <div class="pagination-controls">
+              <button type="button" id="prev-page" class="pagination-btn">Previous</button>
+              <span class="pagination-current" id="pagination-current"></span>
+              <button type="button" id="next-page" class="pagination-btn">Next</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- New / Edit Bill Modal (POS) -->
+  <div class="modal-overlay modal-overlay-fullpage" id="form-modal-overlay" hidden>
+    <div class="modal-dialog modal-dialog-large modal-dialog-billing modal-dialog-fullpage" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">New Bill</h2>
+        <button type="button" class="modal-close" id="modal-close" aria-label="Close">✕</button>
+      </div>
+      <form id="bill-form" class="modal-form" novalidate>
+        <input type="hidden" id="field-customer" name="customer" value="" />
+        <div class="modal-body">
+          <p class="bill-number-display">Bill Number: <strong id="bill-number-preview">Auto-generated on save</strong></p>
+
+          <div class="pos-layout">
+            <div class="pos-main">
+              <div class="field-group product-search-box">
+                <label for="product-search-input">Add Product</label>
+                <input type="text" id="product-search-input" placeholder="Search by name, SKU, or barcode..." autocomplete="off" />
+                <div class="product-search-results" id="product-search-results" hidden></div>
+              </div>
+
+              <div class="billing-grid-wrapper">
+                <div class="table-wrapper">
+                  <table class="data-table items-table" id="items-table">
+                    <thead>
+                      <tr>
+                        <th>Product</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Discount</th>
+                        <th>GST %</th>
+                        <th>Line Total</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="items-table-body"></tbody>
+                  </table>
+                  <div class="table-state" id="items-empty-state">
+                    <p>No products added yet. Search above to begin billing.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pos-side">
+              <div class="customer-panel">
+                <span class="form-section-title">Customer (Optional)</span>
+                <div class="field-group customer-search-box">
+                  <label for="customer-search-input">Find Customer</label>
+                  <input type="text" id="customer-search-input" placeholder="Search by name, mobile, or code..." autocomplete="off" />
+                  <div class="customer-search-results" id="customer-search-results" hidden></div>
+                </div>
+                <div class="selected-customer-chip" id="selected-customer-chip" hidden>
+                  <div>
+                    <span class="selected-customer-name" id="selected-customer-name"></span>
+                    <span class="selected-customer-meta" id="selected-customer-meta"></span>
+                  </div>
+                  <button type="button" class="selected-customer-clear" id="selected-customer-clear">Clear</button>
+                </div>
+                <div class="field-group">
+                  <label for="field-customerName">Customer Name</label>
+                  <input type="text" id="field-customerName" name="customerName" maxlength="150" />
+                  <span class="field-error-text" id="error-customerName"></span>
+                </div>
+                <div class="field-group">
+                  <label for="field-customerMobile">Customer Mobile</label>
+                  <input type="text" id="field-customerMobile" name="customerMobile" maxlength="20" placeholder="10-digit mobile number" />
+                  <span class="field-error-text" id="error-customerMobile"></span>
+                </div>
+                <div class="field-group">
+                  <label for="field-paymentMode">Payment Mode</label>
+                  <select id="field-paymentMode" name="paymentMode">
+                    <option value="">Not specified</option>
+                  </select>
+                  <span class="field-error-text" id="error-paymentMode"></span>
+                </div>
+                <div class="field-group">
+                  <label for="field-billDate">Bill Date</label>
+                  <input type="date" id="field-billDate" name="billDate" />
+                  <span class="field-error-text" id="error-billDate"></span>
+                </div>
+                <div class="field-group">
+                  <label for="field-remarks">Remarks</label>
+                  <textarea id="field-remarks" name="remarks" rows="2" maxlength="500"></textarea>
+                  <span class="field-error-text" id="error-remarks"></span>
+                </div>
+              </div>
+
+              <div class="totals-panel">
+                <div class="totals-line"><span>Subtotal</span><span id="totals-subtotal">₹0.00</span></div>
+                <div class="totals-line"><span>Discount</span><span id="totals-discount">₹0.00</span></div>
+                <div class="totals-line"><span>Tax</span><span id="totals-tax">₹0.00</span></div>
+                <div class="totals-line totals-grand"><span>Grand Total</span><span id="totals-grand">₹0.00</span></div>
+              </div>
+
+              <div class="pos-actions">
+                <button type="button" class="btn-primary" id="modal-finalize">
+                  <span id="modal-finalize-text">Finalize Bill</span>
+                </button>
+                <button type="button" class="btn-secondary" id="modal-save-draft">
+                  <span id="modal-save-draft-text">Save Draft</span>
+                </button>
+                <button type="button" class="btn-secondary" id="modal-cancel">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="form-error" id="form-error" role="alert"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Identifier Picker Modal -->
+  <div class="modal-overlay modal-overlay-fullpage" id="identifier-modal-overlay" hidden>
+    <div class="modal-dialog modal-dialog-small modal-dialog-fullpage" role="dialog" aria-modal="true" aria-labelledby="identifier-modal-title">
+      <div class="modal-header">
+        <h2 class="modal-title" id="identifier-modal-title">Select Serial Numbers</h2>
+        <button type="button" class="modal-close" id="identifier-modal-close" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="identifier-picker-count" id="identifier-picker-count"></p>
+        <div class="identifier-picker-list" id="identifier-picker-list"></div>
+        <p class="form-error" id="identifier-picker-error" role="alert"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="identifier-modal-cancel">Cancel</button>
+        <button type="button" class="btn-primary" id="identifier-modal-confirm">Confirm Selection</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Bill Modal -->
+  <div class="modal-overlay modal-overlay-fullpage" id="view-modal-overlay" hidden>
+    <div class="modal-dialog modal-dialog-large modal-dialog-fullpage" role="dialog" aria-modal="true" aria-labelledby="view-modal-title">
+      <div class="modal-header">
+        <h2 class="modal-title" id="view-modal-title">Bill Details</h2>
+        <button type="button" class="modal-close" id="view-modal-close" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body" id="view-modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="view-modal-preview" hidden>Preview</button>
+        <button type="button" class="btn-secondary" id="view-modal-print" hidden>Print</button>
+        <button type="button" class="btn-secondary" id="view-modal-close-footer">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Invoice Preview Modal -->
+  <div class="modal-overlay modal-overlay-fullpage" id="preview-modal-overlay" hidden>
+    <div class="modal-dialog modal-dialog-large modal-dialog-preview modal-dialog-fullpage" role="dialog" aria-modal="true" aria-labelledby="preview-modal-title">
+      <div class="modal-header preview-modal-header">
+        <h2 class="modal-title" id="preview-modal-title">Invoice Preview</h2>
+        <button type="button" class="modal-close" id="preview-modal-close" aria-label="Close">✕</button>
+      </div>
+
+      <div class="preview-toolbar">
+        <div class="preview-toolbar-group">
+          <label for="preview-template-select" class="preview-toolbar-label">Template</label>
+          <select id="preview-template-select" class="status-filter">
+            <option value="a4-professional">A4 Professional</option>
+            <option value="a5-retail">A5 Retail</option>
+          </select>
+        </div>
+
+        <div class="preview-toolbar-group">
+          <button type="button" class="preview-tool-btn" id="preview-zoom-out" aria-label="Zoom out">−</button>
+          <span class="preview-zoom-value" id="preview-zoom-value">100%</span>
+          <button type="button" class="preview-tool-btn" id="preview-zoom-in" aria-label="Zoom in">+</button>
+          <button type="button" class="preview-tool-btn preview-tool-btn-wide" id="preview-zoom-fit">Fit</button>
+          <button type="button" class="preview-tool-btn preview-tool-btn-wide" id="preview-zoom-actual">100%</button>
+        </div>
+
+        <div class="preview-toolbar-group" id="preview-page-nav" hidden>
+          <button type="button" class="preview-tool-btn" id="preview-prev-page" aria-label="Previous page">‹</button>
+          <span class="preview-page-indicator" id="preview-page-indicator">Page 1 of 1</span>
+          <button type="button" class="preview-tool-btn" id="preview-next-page" aria-label="Next page">›</button>
+        </div>
+      </div>
+
+      <div class="preview-body" id="preview-body">
+        <div class="table-state" id="preview-loading-state">
+          <p>Loading invoice preview...</p>
+        </div>
+        <div class="table-state" id="preview-error-state" hidden>
+          <p id="preview-error-text">Unable to load invoice preview.</p>
+        </div>
+        <div class="preview-canvas" id="preview-canvas" hidden>
+          <iframe id="preview-frame" class="preview-frame" title="Invoice preview" sandbox="allow-same-origin"></iframe>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="preview-modal-close-footer">Close</button>
+        <button type="button" class="btn-primary" id="preview-print-button">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cancel Bill Dialog -->
+  <div class="modal-overlay modal-overlay-fullpage" id="cancel-modal-overlay" hidden>
+    <div class="modal-dialog modal-dialog-small modal-dialog-fullpage" role="alertdialog" aria-modal="true">
+      <div class="modal-header">
+        <h2 class="modal-title">Cancel Bill</h2>
+      </div>
+      <div class="modal-body">
+        <p id="cancel-modal-message" class="cancel-modal-message"></p>
+        <div class="field-group">
+          <label for="cancel-reason-input">Cancellation Reason <span class="required-mark">*</span></label>
+          <textarea id="cancel-reason-input" rows="3" maxlength="500" placeholder="Explain why this bill is being cancelled"></textarea>
+          <span class="field-error-text" id="cancel-error-reason"></span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="cancel-modal-dismiss">Back</button>
+        <button type="button" class="btn-primary" id="cancel-modal-confirm">Confirm Cancellation</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="../mobileValidation.js"></script>
+  <script src="../permissions.js"></script>
+  <script src="billing.js"></script>
+</body>
+</html>

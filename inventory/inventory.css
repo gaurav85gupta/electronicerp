@@ -1,0 +1,71 @@
+/* Inventory — extends master-data.css */
+
+.active-only-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475467;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.active-only-label input {
+  cursor: pointer;
+}
+
+.btn-secondary-action {
+  background-color: #ffffff;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.btn-secondary-action:hover {
+  background-color: #eff6ff;
+}
+
+.status-badge.in-stock {
+  color: #12805c;
+  background-color: #ecfdf3;
+}
+
+.status-badge.low-stock {
+  color: #b54708;
+  background-color: #fffaeb;
+}
+
+.status-badge.out-of-stock {
+  color: #b42318;
+  background-color: #fef3f2;
+}
+
+.current-stock-hint {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background-color: #f9fafb;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: -6px;
+}
+
+.current-stock-hint.warning {
+  color: #b42318;
+  background-color: #fef3f2;
+  border-color: #fecdca;
+}
+
+.history-modal-body {
+  min-height: 320px;
+}
+
+.row-action-btn.link {
+  color: var(--color-primary);
+  border-color: var(--color-border);
+}
+
+.row-action-btn.link:hover {
+  background-color: #eff6ff;
+}

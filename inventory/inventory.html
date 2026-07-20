@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Electronics ERP — Inventory</title>
+  <link rel="stylesheet" href="../dashboard/dashboard.css" />
+  <link rel="stylesheet" href="../master-data/master-data.css" />
+  <link rel="stylesheet" href="inventory.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="header-left">
+        <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="brand">
+          <div class="brand-logo">EE</div>
+          <span class="brand-name">Electronics ERP</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <span id="current-date" class="current-date"></span>
+        <div class="user-info">
+          <div class="user-details">
+            <span id="user-name" class="user-name">—</span>
+            <span id="user-role" class="user-role">—</span>
+          </div>
+          <div class="user-avatar" id="user-avatar">—</div>
+        </div>
+        <button id="logout-button" class="logout-button">Logout</button>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+          <a href="../dashboard/dashboard.html" class="nav-item" data-nav="dashboard">
+            <span class="nav-icon" aria-hidden="true">▦</span>
+            <span class="nav-label">Dashboard</span>
+          </a>
+          <a href="inventory.html" class="nav-item active" data-nav="inventory">
+            <span class="nav-icon" aria-hidden="true">▢</span>
+            <span class="nav-label">Inventory</span>
+          </a>
+          <a href="../purchase/purchase.html" class="nav-item" data-nav="purchase">
+            <span class="nav-icon" aria-hidden="true">▤</span>
+            <span class="nav-label">Purchase</span>
+          </a>
+          <a href="../billing/billing.html" class="nav-item" data-nav="billing">
+            <span class="nav-icon" aria-hidden="true">▥</span>
+            <span class="nav-label">Billing (POS)</span>
+          </a>
+          <a href="../customers/customers.html" class="nav-item" data-nav="customers">
+            <span class="nav-icon" aria-hidden="true">◔</span>
+            <span class="nav-label">Customers</span>
+          </a>
+          <a href="../master-data/master-data.html" class="nav-item" data-nav="master-data">
+            <span class="nav-icon" aria-hidden="true">◑</span>
+            <span class="nav-label">Master Data</span>
+          </a>
+          <a href="../product-master/product-master.html" class="nav-item" data-nav="product-master">
+            <span class="nav-icon" aria-hidden="true">▧</span>
+            <span class="nav-label">Product Master</span>
+          </a>
+          <a href="../reports/reports.html" class="nav-item" data-nav="reports">
+            <span class="nav-icon" aria-hidden="true">▧</span>
+            <span class="nav-label">Reports</span>
+          </a>
+          <a href="../settings/settings.html" class="nav-item" data-nav="settings">
+            <span class="nav-icon" aria-hidden="true">⚙</span>
+            <span class="nav-label">Settings</span>
+          </a>
+        </nav>
+
+        <button id="sidebar-logout" class="sidebar-logout">
+          <span class="nav-icon" aria-hidden="true">⏻</span>
+          <span class="nav-label">Logout</span>
+        </button>
+      </aside>
+
+      <main class="main-content">
+        <div class="content-header">
+          <h1 class="page-title">Inventory</h1>
+          <p class="page-subtitle">Track stock levels, record adjustments, and review movement history.</p>
+        </div>
+
+        <section class="master-panel">
+          <div class="panel-toolbar">
+            <div class="search-box">
+              <span class="search-icon" aria-hidden="true">⌕</span>
+              <input type="text" id="search-input" placeholder="Search by name, SKU, or barcode..." />
+            </div>
+            <div class="toolbar-actions">
+              <select id="category-filter" class="status-filter">
+                <option value="">All Categories</option>
+              </select>
+              <select id="brand-filter" class="status-filter">
+                <option value="">All Brands</option>
+              </select>
+              <select id="stock-status-filter" class="status-filter">
+                <option value="">All Stock Status</option>
+                <option value="In Stock">In Stock</option>
+                <option value="Low Stock">Low Stock</option>
+                <option value="Out of Stock">Out of Stock</option>
+              </select>
+              <label class="active-only-label">
+                <input type="checkbox" id="active-only-filter" />
+                Active Products Only
+              </label>
+              <button type="button" id="opening-stock-button" class="add-button">+ Opening Stock</button>
+              <button type="button" id="adjustment-button" class="add-button btn-secondary-action">Stock Adjustment</button>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="data-table" id="data-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>SKU</th>
+                  <th>Category</th>
+                  <th>Brand</th>
+                  <th>Current Qty</th>
+                  <th>Available Qty</th>
+                  <th>Reorder Level</th>
+                  <th>Stock Status</th>
+                  <th>Last Updated</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="table-body"></tbody>
+            </table>
+
+            <div class="table-state" id="loading-state" hidden>
+              <p>Loading inventory...</p>
+            </div>
+
+            <div class="table-state" id="empty-state" hidden>
+              <p id="empty-state-text">No inventory records found.</p>
+            </div>
+          </div>
+
+          <div class="pagination-bar" id="pagination-bar" hidden>
+            <span class="pagination-info" id="pagination-info"></span>
+            <div class="pagination-controls">
+              <button type="button" id="prev-page" class="pagination-btn">Previous</button>
+              <span class="pagination-current" id="pagination-current"></span>
+              <button type="button" id="next-page" class="pagination-btn">Next</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Opening Stock Modal -->
+  <div class="modal-overlay" id="opening-stock-modal-overlay" hidden>
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="opening-stock-title">
+      <div class="modal-header">
+        <h2 class="modal-title" id="opening-stock-title">Create Opening Stock</h2>
+        <button type="button" class="modal-close" id="opening-stock-close" aria-label="Close">✕</button>
+      </div>
+      <form id="opening-stock-form" class="modal-form" novalidate>
+        <div class="modal-body">
+          <div class="field-group">
+            <label for="os-field-product">Product <span class="required-mark">*</span></label>
+            <select id="os-field-product" name="product"></select>
+            <span class="field-error-text" id="os-error-product"></span>
+          </div>
+          <div class="field-group">
+            <label for="os-field-quantity">Opening Quantity <span class="required-mark">*</span></label>
+            <input type="number" id="os-field-quantity" name="quantity" min="0" step="1" />
+            <span class="field-error-text" id="os-error-quantity"></span>
+          </div>
+          <div class="field-group">
+            <label for="os-field-minStockLevel">Minimum Stock Level</label>
+            <input type="number" id="os-field-minStockLevel" name="minStockLevel" min="0" step="1" placeholder="Defaults from Product Master" />
+            <span class="field-error-text" id="os-error-minStockLevel"></span>
+          </div>
+          <div class="field-group">
+            <label for="os-field-maxStockLevel">Maximum Stock Level</label>
+            <input type="number" id="os-field-maxStockLevel" name="maxStockLevel" min="0" step="1" placeholder="Defaults from Product Master" />
+            <span class="field-error-text" id="os-error-maxStockLevel"></span>
+          </div>
+          <div class="field-group">
+            <label for="os-field-reorderLevel">Reorder Level</label>
+            <input type="number" id="os-field-reorderLevel" name="reorderLevel" min="0" step="1" placeholder="Defaults from Product Master" />
+            <span class="field-error-text" id="os-error-reorderLevel"></span>
+          </div>
+        </div>
+        <p class="form-error" id="opening-stock-error" role="alert"></p>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="opening-stock-cancel">Cancel</button>
+          <button type="submit" class="btn-primary" id="opening-stock-submit">
+            <span id="opening-stock-submit-text">Save</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Stock Adjustment Modal -->
+  <div class="modal-overlay" id="adjustment-modal-overlay" hidden>
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="adjustment-title">
+      <div class="modal-header">
+        <h2 class="modal-title" id="adjustment-title">Stock Adjustment</h2>
+        <button type="button" class="modal-close" id="adjustment-close" aria-label="Close">✕</button>
+      </div>
+      <form id="adjustment-form" class="modal-form" novalidate>
+        <div class="modal-body">
+          <div class="field-group">
+            <label for="adj-field-product">Product <span class="required-mark">*</span></label>
+            <select id="adj-field-product" name="product"></select>
+            <span class="field-error-text" id="adj-error-product"></span>
+          </div>
+          <p class="current-stock-hint" id="adj-current-stock-hint"></p>
+          <div class="field-group">
+            <label for="adj-field-adjustmentType">Adjustment Type <span class="required-mark">*</span></label>
+            <select id="adj-field-adjustmentType" name="adjustmentType">
+              <option value="Stock Increase">Stock Increase</option>
+              <option value="Stock Decrease">Stock Decrease</option>
+            </select>
+            <span class="field-error-text" id="adj-error-adjustmentType"></span>
+          </div>
+          <div class="field-group">
+            <label for="adj-field-quantity">Quantity <span class="required-mark">*</span></label>
+            <input type="number" id="adj-field-quantity" name="quantity" min="1" step="1" />
+            <span class="field-error-text" id="adj-error-quantity"></span>
+          </div>
+          <div class="field-group">
+            <label for="adj-field-reason">Reason <span class="required-mark">*</span></label>
+            <input type="text" id="adj-field-reason" name="reason" maxlength="200" placeholder="e.g. Physical count correction, Damaged stock" />
+            <span class="field-error-text" id="adj-error-reason"></span>
+          </div>
+          <div class="field-group">
+            <label for="adj-field-remarks">Remarks (Optional)</label>
+            <textarea id="adj-field-remarks" name="remarks" rows="2" maxlength="500"></textarea>
+            <span class="field-error-text" id="adj-error-remarks"></span>
+          </div>
+        </div>
+        <p class="form-error" id="adjustment-error" role="alert"></p>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="adjustment-cancel">Cancel</button>
+          <button type="submit" class="btn-primary" id="adjustment-submit">
+            <span id="adjustment-submit-text">Save Adjustment</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Movement History Modal -->
+  <div class="modal-overlay" id="history-modal-overlay" hidden>
+    <div class="modal-dialog modal-dialog-large" role="dialog" aria-modal="true" aria-labelledby="history-title">
+      <div class="modal-header">
+        <h2 class="modal-title" id="history-title">Movement History</h2>
+        <button type="button" class="modal-close" id="history-close" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body history-modal-body">
+        <div class="table-wrapper">
+          <table class="data-table" id="history-table">
+            <thead>
+              <tr>
+                <th>Date &amp; Time</th>
+                <th>Movement Type</th>
+                <th>Quantity</th>
+                <th>Previous Stock</th>
+                <th>New Stock</th>
+                <th>Reference</th>
+                <th>User</th>
+                <th>Remarks</th>
+              </tr>
+            </thead>
+            <tbody id="history-table-body"></tbody>
+          </table>
+          <div class="table-state" id="history-loading-state" hidden>
+            <p>Loading movement history...</p>
+          </div>
+          <div class="table-state" id="history-empty-state" hidden>
+            <p>No movement history found for this product.</p>
+          </div>
+        </div>
+        <div class="pagination-bar" id="history-pagination-bar" hidden>
+          <span class="pagination-info" id="history-pagination-info"></span>
+          <div class="pagination-controls">
+            <button type="button" id="history-prev-page" class="pagination-btn">Previous</button>
+            <span class="pagination-current" id="history-pagination-current"></span>
+            <button type="button" id="history-next-page" class="pagination-btn">Next</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="history-close-footer">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="../permissions.js"></script>
+  <script src="inventory.js"></script>
+</body>
+</html>

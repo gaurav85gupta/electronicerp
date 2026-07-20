@@ -1,0 +1,158 @@
+/* Customers — extends master-data.css / product-master.css */
+
+.city-filter-input {
+  width: 120px;
+}
+
+.customer-code-display {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background-color: #f9fafb;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.customer-code-display strong {
+  color: var(--color-text);
+}
+
+.customer-type-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--color-primary);
+  background-color: #eff6ff;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.customer-type-badge.wholesale {
+  color: #6941c6;
+  background-color: #f4f3ff;
+}
+
+/* Customer Profile */
+
+.profile-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.profile-identity h3 {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.profile-identity p {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.profile-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.profile-stat-card {
+  background-color: #f9fafb;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.profile-stat-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text-muted);
+}
+
+.profile-stat-value {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.profile-recent-bills {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-bill-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.profile-bill-number {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.profile-bill-meta {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.profile-bill-amount {
+  font-weight: 700;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.profile-product-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.profile-product-chip {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-text);
+  background-color: #f9fafb;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+.profile-product-chip span {
+  color: var(--color-text-muted);
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+.profile-empty-note {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  padding: 12px 0;
+}
+
+@media (max-width: 640px) {
+  .profile-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

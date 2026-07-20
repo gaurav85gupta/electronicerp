@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Electronics ERP — Purchase</title>
+  <link rel="stylesheet" href="../dashboard/dashboard.css" />
+  <link rel="stylesheet" href="../master-data/master-data.css" />
+  <link rel="stylesheet" href="../product-master/product-master.css" />
+  <link rel="stylesheet" href="purchase.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="header-left">
+        <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="brand">
+          <div class="brand-logo">EE</div>
+          <span class="brand-name">Electronics ERP</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <span id="current-date" class="current-date"></span>
+        <div class="user-info">
+          <div class="user-details">
+            <span id="user-name" class="user-name">—</span>
+            <span id="user-role" class="user-role">—</span>
+          </div>
+          <div class="user-avatar" id="user-avatar">—</div>
+        </div>
+        <button id="logout-button" class="logout-button">Logout</button>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+          <a href="../dashboard/dashboard.html" class="nav-item" data-nav="dashboard">
+            <span class="nav-icon" aria-hidden="true">▦</span>
+            <span class="nav-label">Dashboard</span>
+          </a>
+          <a href="../inventory/inventory.html" class="nav-item" data-nav="inventory">
+            <span class="nav-icon" aria-hidden="true">▢</span>
+            <span class="nav-label">Inventory</span>
+          </a>
+          <a href="purchase.html" class="nav-item active" data-nav="purchase">
+            <span class="nav-icon" aria-hidden="true">▤</span>
+            <span class="nav-label">Purchase</span>
+          </a>
+          <a href="../billing/billing.html" class="nav-item" data-nav="billing">
+            <span class="nav-icon" aria-hidden="true">▥</span>
+            <span class="nav-label">Billing (POS)</span>
+          </a>
+          <a href="../customers/customers.html" class="nav-item" data-nav="customers">
+            <span class="nav-icon" aria-hidden="true">◔</span>
+            <span class="nav-label">Customers</span>
+          </a>
+          <a href="../master-data/master-data.html" class="nav-item" data-nav="master-data">
+            <span class="nav-icon" aria-hidden="true">◑</span>
+            <span class="nav-label">Master Data</span>
+          </a>
+          <a href="../product-master/product-master.html" class="nav-item" data-nav="product-master">
+            <span class="nav-icon" aria-hidden="true">▧</span>
+            <span class="nav-label">Product Master</span>
+          </a>
+          <a href="../reports/reports.html" class="nav-item" data-nav="reports">
+            <span class="nav-icon" aria-hidden="true">▧</span>
+            <span class="nav-label">Reports</span>
+          </a>
+          <a href="../settings/settings.html" class="nav-item" data-nav="settings">
+            <span class="nav-icon" aria-hidden="true">⚙</span>
+            <span class="nav-label">Settings</span>
+          </a>
+        </nav>
+
+        <button id="sidebar-logout" class="sidebar-logout">
+          <span class="nav-icon" aria-hidden="true">⏻</span>
+          <span class="nav-label">Logout</span>
+        </button>
+      </aside>
+
+      <main class="main-content">
+        <div class="content-header">
+          <h1 class="page-title">Purchase</h1>
+          <p class="page-subtitle">Record purchases from suppliers and keep inventory in sync.</p>
+        </div>
+
+        <section class="master-panel">
+          <div class="panel-toolbar">
+            <div class="search-box">
+              <span class="search-icon" aria-hidden="true">⌕</span>
+              <input type="text" id="search-input" placeholder="Search by purchase #, supplier, or invoice #..." />
+            </div>
+            <div class="toolbar-actions">
+              <select id="supplier-filter" class="status-filter">
+                <option value="">All Suppliers</option>
+              </select>
+              <select id="payment-mode-filter" class="status-filter">
+                <option value="">All Payment Modes</option>
+              </select>
+              <select id="status-filter" class="status-filter">
+                <option value="">All Status</option>
+                <option value="Draft">Draft</option>
+                <option value="Finalized">Finalized</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+              <input type="date" id="date-from-filter" class="status-filter" title="From date" />
+              <input type="date" id="date-to-filter" class="status-filter" title="To date" />
+              <button type="button" id="add-button" class="add-button">+ New Purchase</button>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="data-table" id="data-table">
+              <thead>
+                <tr>
+                  <th>Purchase Number</th>
+                  <th>Date</th>
+                  <th>Supplier</th>
+                  <th>Total Amount</th>
+                  <th>Status</th>
+                  <th>Created By</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="table-body"></tbody>
+            </table>
+
+            <div class="table-state" id="loading-state" hidden>
+              <p>Loading purchases...</p>
+            </div>
+
+            <div class="table-state" id="empty-state" hidden>
+              <p id="empty-state-text">No purchases found. Click "New Purchase" to create one.</p>
+            </div>
+          </div>
+
+          <div class="pagination-bar" id="pagination-bar" hidden>
+            <span class="pagination-info" id="pagination-info"></span>
+            <div class="pagination-controls">
+              <button type="button" id="prev-page" class="pagination-btn">Previous</button>
+              <span class="pagination-current" id="pagination-current"></span>
+              <button type="button" id="next-page" class="pagination-btn">Next</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Purchase Form Modal (Create / Edit Draft) -->
+  <div class="modal-overlay" id="form-modal-overlay" hidden>
+    <div class="modal-dialog modal-dialog-large modal-dialog-purchase" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">New Purchase</h2>
+        <button type="button" class="modal-close" id="modal-close" aria-label="Close">✕</button>
+      </div>
+      <form id="purchase-form" class="modal-form" novalidate>
+        <div class="modal-body">
+
+          <div class="form-section">
+            <span class="form-section-title">Purchase Details</span>
+            <div class="form-grid">
+              <div class="field-group">
+                <label for="field-purchaseNumber">Purchase Number</label>
+                <input type="text" id="field-purchaseNumber" disabled placeholder="Auto-generated on save" />
+              </div>
+              <div class="field-group">
+                <label for="field-purchaseDate">Purchase Date <span class="required-mark">*</span></label>
+                <input type="date" id="field-purchaseDate" name="purchaseDate" />
+                <span class="field-error-text" id="error-purchaseDate"></span>
+              </div>
+              <div class="field-group">
+                <label for="field-supplier">Supplier <span class="required-mark">*</span></label>
+                <select id="field-supplier" name="supplier"></select>
+                <span class="field-error-text" id="error-supplier"></span>
+              </div>
+              <div class="field-group">
+                <label for="field-paymentMode">Payment Mode</label>
+                <select id="field-paymentMode" name="paymentMode">
+                  <option value="">Not specified</option>
+                </select>
+                <span class="field-error-text" id="error-paymentMode"></span>
+              </div>
+              <div class="field-group">
+                <label for="field-supplierInvoiceNumber">Supplier Invoice Number</label>
+                <input type="text" id="field-supplierInvoiceNumber" name="supplierInvoiceNumber" maxlength="100" />
+                <span class="field-error-text" id="error-supplierInvoiceNumber"></span>
+              </div>
+              <div class="field-group">
+                <label for="field-supplierInvoiceDate">Supplier Invoice Date</label>
+                <input type="date" id="field-supplierInvoiceDate" name="supplierInvoiceDate" />
+                <span class="field-error-text" id="error-supplierInvoiceDate"></span>
+              </div>
+              <div class="field-group">
+                <label for="field-dueDate">Due Date</label>
+                <input type="date" id="field-dueDate" name="dueDate" />
+                <span class="field-error-text" id="error-dueDate"></span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label for="field-remarks">Remarks</label>
+              <textarea id="field-remarks" name="remarks" rows="2" maxlength="500"></textarea>
+              <span class="field-error-text" id="error-remarks"></span>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="items-section-header">
+              <span class="form-section-title">Purchase Items</span>
+              <button type="button" id="add-item-button" class="add-button btn-secondary-action">+ Add Product</button>
+            </div>
+
+            <div class="items-table-wrapper">
+              <table class="data-table items-table" id="items-table">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Discount</th>
+                    <th>GST %</th>
+                    <th>Tax</th>
+                    <th>Line Total</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="items-table-body"></tbody>
+              </table>
+              <div class="table-state" id="items-empty-state">
+                <p>No items added yet. Click "Add Product" to begin.</p>
+              </div>
+            </div>
+
+            <div class="totals-row">
+              <div class="totals-box">
+                <div class="totals-line"><span>Subtotal</span><span id="totals-subtotal">₹0.00</span></div>
+                <div class="totals-line"><span>Discount</span><span id="totals-discount">₹0.00</span></div>
+                <div class="totals-line"><span>Tax</span><span id="totals-tax">₹0.00</span></div>
+                <div class="totals-line totals-grand"><span>Grand Total</span><span id="totals-grand">₹0.00</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <p class="form-error" id="form-error" role="alert"></p>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="modal-cancel">Cancel</button>
+          <button type="button" class="btn-secondary" id="modal-save-draft">
+            <span id="modal-save-draft-text">Save as Draft</span>
+          </button>
+          <button type="button" class="btn-primary" id="modal-finalize">
+            <span id="modal-finalize-text">Finalize Purchase</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add / Edit Item Modal -->
+  <div class="modal-overlay" id="item-modal-overlay" hidden>
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="item-modal-title">
+      <div class="modal-header">
+        <h2 class="modal-title" id="item-modal-title">Add Product</h2>
+        <button type="button" class="modal-close" id="item-modal-close" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="field-group">
+          <label for="item-field-product">Product <span class="required-mark">*</span></label>
+          <select id="item-field-product"></select>
+          <span class="field-error-text" id="item-error-product"></span>
+        </div>
+        <div class="form-grid">
+          <div class="field-group">
+            <label for="item-field-quantity">Quantity <span class="required-mark">*</span></label>
+            <input type="number" id="item-field-quantity" min="1" step="1" />
+            <span class="field-error-text" id="item-error-quantity"></span>
+          </div>
+          <div class="field-group">
+            <label for="item-field-purchasePrice">Purchase Price <span class="required-mark">*</span></label>
+            <input type="number" id="item-field-purchasePrice" min="0" step="0.01" />
+            <span class="field-error-text" id="item-error-purchasePrice"></span>
+          </div>
+          <div class="field-group">
+            <label for="item-field-discount">Discount (Amount)</label>
+            <input type="number" id="item-field-discount" min="0" step="0.01" />
+            <span class="field-error-text" id="item-error-discount"></span>
+          </div>
+          <div class="field-group">
+            <label for="item-field-gstPercentage">GST %</label>
+            <input type="number" id="item-field-gstPercentage" min="0" max="100" step="0.01" />
+            <span class="field-error-text" id="item-error-gstPercentage"></span>
+          </div>
+        </div>
+        <div class="field-group" id="item-identifiers-group" hidden>
+          <label id="item-identifiers-label">Serial Numbers</label>
+          <div id="item-identifiers-list" class="identifiers-list"></div>
+          <span class="field-error-text" id="item-error-identifiers"></span>
+        </div>
+        <p class="item-line-preview" id="item-line-preview"></p>
+        <p class="form-error" id="item-form-error" role="alert"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="item-modal-cancel">Cancel</button>
+        <button type="button" class="btn-primary" id="item-modal-submit">
+          <span id="item-modal-submit-text">Add Item</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Purchase Modal -->
+  <div class="modal-overlay" id="view-modal-overlay" hidden>
+    <div class="modal-dialog modal-dialog-large" role="dialog" aria-modal="true" aria-labelledby="view-modal-title">
+      <div class="modal-header">
+        <h2 class="modal-title" id="view-modal-title">Purchase Details</h2>
+        <button type="button" class="modal-close" id="view-modal-close" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body" id="view-modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="view-modal-close-footer">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cancel Purchase Dialog -->
+  <div class="modal-overlay" id="cancel-modal-overlay" hidden>
+    <div class="modal-dialog modal-dialog-small" role="alertdialog" aria-modal="true">
+      <div class="modal-header">
+        <h2 class="modal-title">Cancel Purchase</h2>
+      </div>
+      <div class="modal-body">
+        <p id="cancel-modal-message" class="cancel-modal-message"></p>
+        <div class="field-group">
+          <label for="cancel-reason-input">Cancellation Reason <span class="required-mark">*</span></label>
+          <textarea id="cancel-reason-input" rows="3" maxlength="500" placeholder="Explain why this purchase is being cancelled"></textarea>
+          <span class="field-error-text" id="cancel-error-reason"></span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="cancel-modal-dismiss">Back</button>
+        <button type="button" class="btn-primary" id="cancel-modal-confirm">Confirm Cancellation</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="../permissions.js"></script>
+  <script src="purchase.js"></script>
+</body>
+</html>

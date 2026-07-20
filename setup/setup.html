@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Electronics ERP — First-Time Setup</title>
+  <link rel="stylesheet" href="setup.css" />
+</head>
+<body>
+  <main class="setup-card">
+    <div class="setup-header">
+      <span class="setup-badge">First-Time Setup</span>
+      <h1 class="setup-title">Create Your Administrator Account</h1>
+      <p class="setup-subtitle">This account will have full control over the system. You'll only see this screen once.</p>
+    </div>
+
+    <form id="setup-form" class="setup-form" novalidate>
+      <div class="field-group">
+        <label for="full-name">Owner Full Name</label>
+        <input type="text" id="full-name" name="fullName" autocomplete="name" autofocus />
+      </div>
+
+      <div class="field-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" autocomplete="username" />
+        <span class="field-hint">3-30 characters: letters, numbers, dots, or underscores</span>
+      </div>
+
+      <div class="field-group">
+        <label for="password">Password</label>
+        <div class="password-wrapper">
+          <input type="password" id="password" name="password" autocomplete="new-password" />
+          <button type="button" class="toggle-password" data-target="password" aria-label="Show password">Show</button>
+        </div>
+        <span class="field-hint">At least 8 characters, with uppercase, lowercase, and a number</span>
+      </div>
+
+      <div class="field-group">
+        <label for="confirm-password">Confirm Password</label>
+        <div class="password-wrapper">
+          <input type="password" id="confirm-password" name="confirmPassword" autocomplete="new-password" />
+          <button type="button" class="toggle-password" data-target="confirm-password" aria-label="Show password">Show</button>
+        </div>
+      </div>
+
+      <p id="error-message" class="error-message" role="alert"></p>
+
+      <button type="submit" id="setup-button" class="setup-button">
+        <span id="setup-button-text">Create Admin Account</span>
+      </button>
+    </form>
+  </main>
+  <script src="setup.js"></script>
+</body>
+</html>

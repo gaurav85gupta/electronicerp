@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Electronics ERP — Settings</title>
+  <link rel="stylesheet" href="../dashboard/dashboard.css" />
+  <link rel="stylesheet" href="../master-data/master-data.css" />
+  <link rel="stylesheet" href="../product-master/product-master.css" />
+  <link rel="stylesheet" href="settings.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="header-left">
+        <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="brand">
+          <div class="brand-logo">EE</div>
+          <span class="brand-name">Electronics ERP</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <span id="current-date" class="current-date"></span>
+        <div class="user-info">
+          <div class="user-details">
+            <span id="user-name" class="user-name">—</span>
+            <span id="user-role" class="user-role">—</span>
+          </div>
+          <div class="user-avatar" id="user-avatar">—</div>
+        </div>
+        <button id="logout-button" class="logout-button">Logout</button>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+          <a href="../dashboard/dashboard.html" class="nav-item" data-nav="dashboard">
+            <span class="nav-icon" aria-hidden="true">▦</span>
+            <span class="nav-label">Dashboard</span>
+          </a>
+          <a href="../inventory/inventory.html" class="nav-item" data-nav="inventory">
+            <span class="nav-icon" aria-hidden="true">▢</span>
+            <span class="nav-label">Inventory</span>
+          </a>
+          <a href="../purchase/purchase.html" class="nav-item" data-nav="purchase">
+            <span class="nav-icon" aria-hidden="true">▤</span>
+            <span class="nav-label">Purchase</span>
+          </a>
+          <a href="../billing/billing.html" class="nav-item" data-nav="billing">
+            <span class="nav-icon" aria-hidden="true">▥</span>
+            <span class="nav-label">Billing (POS)</span>
+          </a>
+          <a href="../customers/customers.html" class="nav-item" data-nav="customers">
+            <span class="nav-icon" aria-hidden="true">◔</span>
+            <span class="nav-label">Customers</span>
+          </a>
+          <a href="../master-data/master-data.html" class="nav-item" data-nav="master-data">
+            <span class="nav-icon" aria-hidden="true">◑</span>
+            <span class="nav-label">Master Data</span>
+          </a>
+          <a href="../product-master/product-master.html" class="nav-item" data-nav="product-master">
+            <span class="nav-icon" aria-hidden="true">▧</span>
+            <span class="nav-label">Product Master</span>
+          </a>
+          <a href="../reports/reports.html" class="nav-item" data-nav="reports">
+            <span class="nav-icon" aria-hidden="true">▧</span>
+            <span class="nav-label">Reports</span>
+          </a>
+          <a href="settings.html" class="nav-item active" data-nav="settings">
+            <span class="nav-icon" aria-hidden="true">⚙</span>
+            <span class="nav-label">Settings</span>
+          </a>
+        </nav>
+
+        <button id="sidebar-logout" class="sidebar-logout">
+          <span class="nav-icon" aria-hidden="true">⏻</span>
+          <span class="nav-label">Logout</span>
+        </button>
+      </aside>
+
+      <main class="main-content">
+        <div class="content-header">
+          <h1 class="page-title">Settings</h1>
+          <p class="page-subtitle">Configure business profile, users, permissions, numbering, and system preferences.</p>
+        </div>
+
+        <div class="settings-layout">
+          <nav class="settings-nav" id="settings-nav" aria-label="Settings sections">
+            <button type="button" class="settings-nav-item active" data-section="business-profile">
+              <span class="settings-nav-label">Business Profile</span>
+            </button>
+            <button type="button" class="settings-nav-item" data-section="users">
+              <span class="settings-nav-label">User Management</span>
+            </button>
+            <button type="button" class="settings-nav-item" data-section="permissions">
+              <span class="settings-nav-label">Role Permissions</span>
+            </button>
+            <button type="button" class="settings-nav-item" data-section="number-series">
+              <span class="settings-nav-label">Number Series</span>
+            </button>
+            <button type="button" class="settings-nav-item" data-section="print">
+              <span class="settings-nav-label">Print Settings</span>
+            </button>
+            <button type="button" class="settings-nav-item" data-section="security">
+              <span class="settings-nav-label">Security Settings</span>
+            </button>
+            <button type="button" class="settings-nav-item" data-section="application">
+              <span class="settings-nav-label">Application Settings</span>
+            </button>
+            <button type="button" class="settings-nav-item" data-section="database">
+              <span class="settings-nav-label">Database Information</span>
+            </button>
+            <button type="button" class="settings-nav-item" data-section="about">
+              <span class="settings-nav-label">About</span>
+            </button>
+          </nav>
+
+          <div class="settings-content">
+
+            <!-- Business Profile -->
+            <section class="settings-panel active" id="panel-business-profile">
+              <div class="settings-panel-header">
+                <h2 class="settings-panel-title">Business Profile</h2>
+                <p class="settings-panel-subtitle">Used on invoices, reports, and warranty documents. Only one business profile exists.</p>
+              </div>
+              <form id="business-profile-form" class="settings-form" novalidate>
+                <div class="form-section">
+                  <span class="form-section-title">Identity</span>
+                  <div class="form-grid">
+                    <div class="field-group">
+                      <label for="bp-businessName">Business Name</label>
+                      <input type="text" id="bp-businessName" name="businessName" maxlength="150" />
+                      <span class="field-error-text" id="bp-error-businessName"></span>
+                    </div>
+                    <div class="field-group">
+                      <label for="bp-tagline">Tagline (Optional)</label>
+                      <input type="text" id="bp-tagline" name="tagline" maxlength="200" placeholder="e.g. Your Trusted Electronics Partner" />
+                      <span class="field-error-text" id="bp-error-tagline"></span>
+                    </div>
+                    <div class="field-group">
+                      <label for="bp-ownerName">Owner Name</label>
+                      <input type="text" id="bp-ownerName" name="ownerName" maxlength="150" />
+                      <span class="field-error-text" id="bp-error-ownerName"></span>
+                    </div>
+                    <div class="field-group">
+                      <label for="bp-gstNumber">GST Number</label>
+                      <input type="text" id="bp-gstNumber" name="gstNumber" maxlength="20" placeholder="e.g. 22AAAAA0000A1Z5" />
+                      <span class="field-error-text" id="bp-error-gstNumber"></span>
+                    </div>
+                    <div class="field-group">
+                      <label for="bp-panNumber">PAN Number</label>
+                      <input type="text" id="bp-panNumber" name="panNumber" maxlength="10" placeholder="e.g. AAAAA1234A" />
+                      <span class="field-error-text" id="bp-error-panNumber"></span>
+                    </div>
+                    <div class="field-group">
+                      <label for="bp-mobile">Mobile</label>
+                      <input type="text" id="bp-mobile" name="mobile" maxlength="10" placeholder="10-digit mobile number" />
+                      <span class="field-error-text" id="bp-error-mobile"></span>
+                    </div>
+                    <div class="field-group">
+                      <label for="bp-alternateMobile">Alternate Mobile (Optional)</label>
+                      <input type="text" id="bp-alternateMobile" name="alternateMobile" maxlength="10" placeholder="10-digit mobile number" />
+                      <span class="field-error-text" id="bp-error-alternateMobile"></span>
+                    </div>
+                    <div class="field-group">
+                      <label for="bp-email">Email</label>
+                      <input type="text" id="bp-email" name="email" maxlength="150" />
+                      <span class="field-error-text" id="bp-error-email"></span>
+                    </div>
+                    <div class="field-group">
+                      <label for="bp-website">Website (Optional)</label>
+                      <input type="text" id="bp-website" name="website" maxlength="200" placeholder="e.g. www.example.com" />
+                      <span class="field-error-text" id="bp-error-website"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <span class="form-section-title">Address</span>
+                  <div class="form-grid">
+                    <div class="field-group">
+                      <label for="bp-address">Address</label>
+                      <input type="text" id="bp-address" name="address" maxlength="500" />
+                      <span class="field-error-text" id="bp-error-address"></span>
+                    </div>
+                    <div class="field-group">
+                      <label for="bp-city">City</label>
+                      <input type="text" id="bp-city" name="city" maxlength="100" />
+                      <span class="field-error-text" id="bp-error-city"></span>
+                    </div>
+                    <div class="field-group">
+                      <label for="bp-state">State</label>
+                      <input type="text" id="bp-state" name="state" maxlength="100" />
+                      <span class="field-error-text" id="bp-error-state"></span>
+                    </div>
+                    <div class="field-group">
+                      <label for="bp-pincode">Pincode</label>
+                      <input type="text" id="bp-pincode" name="pincode" maxlength="10" />
+                      <span class="field-error-text" id="bp-error-pincode"></span>
+                    </div>
+                    <div class="field-group">
+                      <label for="bp-country">Country</label>
+                      <input type="text" id="bp-country" name="country" maxlength="100" placeholder="India" />
+                      <span class="field-error-text" id="bp-error-country"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <span class="form-section-title">Logo</span>
+                  <div class="logo-upload-row">
+                    <div class="logo-preview" id="bp-logo-preview">No Logo</div>
+                    <div class="logo-upload-controls">
+                      <input type="file" id="bp-logo-input" accept="image/png,image/jpeg,image/svg+xml" hidden />
+                      <button type="button" class="btn-secondary" id="bp-logo-choose">Choose Logo</button>
+                      <button type="button" class="btn-secondary" id="bp-logo-remove">Remove</button>
+                      <span class="form-section-hint">PNG, JPG, or SVG. Stored with your business profile.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <p class="form-error" id="bp-form-error" role="alert"></p>
+                <div class="settings-form-actions">
+                  <button type="submit" class="btn-primary" id="bp-submit">
+                    <span id="bp-submit-text">Save Business Profile</span>
+                  </button>
+                </div>
+              </form>
+            </section>
+
+            <!-- User Management -->
+            <section class="settings-panel" id="panel-users">
+              <div class="settings-panel-header">
+                <div class="settings-panel-header-row">
+                  <div>
+                    <h2 class="settings-panel-title">User Management</h2>
+                    <p class="settings-panel-subtitle">Create and manage Owner, Manager, and Cashier accounts.</p>
+                  </div>
+                  <button type="button" class="add-button" id="user-add-button">+ Add User</button>
+                </div>
+              </div>
+
+              <div class="settings-table-wrapper">
+                <table class="data-table" id="users-table">
+                  <thead>
+                    <tr>
+                      <th>Full Name</th>
+                      <th>Username</th>
+                      <th>Role</th>
+                      <th>Email</th>
+                      <th>Status</th>
+                      <th>Last Login</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="users-table-body"></tbody>
+                </table>
+                <div class="table-state" id="users-loading-state" hidden><p>Loading users...</p></div>
+                <div class="table-state" id="users-empty-state" hidden><p>No users found.</p></div>
+              </div>
+            </section>
+
+            <!-- Role Permissions -->
+            <section class="settings-panel" id="panel-permissions">
+              <div class="settings-panel-header">
+                <div class="settings-panel-header-row">
+                  <div>
+                    <h2 class="settings-panel-title">Role Permissions</h2>
+                    <p class="settings-panel-subtitle">Configure View, Create, Edit, Delete, Export, and Print access per role and module. Owner always has full access.</p>
+                  </div>
+                  <button type="button" class="btn-primary" id="permissions-save-button">
+                    <span id="permissions-save-text">Save Permissions</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="permissions-role-tabs" id="permissions-role-tabs"></div>
+
+              <div class="settings-table-wrapper">
+                <table class="data-table permission-matrix-table" id="permissions-table">
+                  <thead>
+                    <tr>
+                      <th>Module</th>
+                      <th>View</th>
+                      <th>Create</th>
+                      <th>Edit</th>
+                      <th>Delete</th>
+                      <th>Export</th>
+                      <th>Print</th>
+                    </tr>
+                  </thead>
+                  <tbody id="permissions-table-body"></tbody>
+                </table>
+                <div class="table-state" id="permissions-loading-state" hidden><p>Loading role permissions...</p></div>
+              </div>
+              <p class="form-section-hint permissions-owner-hint">Owner role has full access to every module and cannot be restricted.</p>
+            </section>
+
+            <!-- Number Series -->
+            <section class="settings-panel" id="panel-number-series">
+              <div class="settings-panel-header">
+                <h2 class="settings-panel-title">Number Series</h2>
+                <p class="settings-panel-subtitle">Configure the prefix, starting number, and digit length used for auto-generated document numbers.</p>
+              </div>
+              <div class="settings-table-wrapper">
+                <table class="data-table" id="number-series-table">
+                  <thead>
+                    <tr>
+                      <th>Series</th>
+                      <th>Prefix</th>
+                      <th>Starting Number</th>
+                      <th>Current Number</th>
+                      <th>Number Length</th>
+                      <th>Preview</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="number-series-table-body"></tbody>
+                </table>
+                <div class="table-state" id="number-series-loading-state" hidden><p>Loading number series...</p></div>
+              </div>
+            </section>
+
+            <!-- Print Settings -->
+            <section class="settings-panel" id="panel-print">
+              <div class="settings-panel-header">
+                <h2 class="settings-panel-title">Print Settings</h2>
+                <p class="settings-panel-subtitle">Control invoice template, paper size, printer, and print behavior.</p>
+              </div>
+              <form id="print-settings-form" class="settings-form" novalidate>
+                <div class="form-grid">
+                  <div class="field-group">
+                    <label for="ps-invoiceTemplate">Invoice Template</label>
+                    <select id="ps-invoiceTemplate" name="invoiceTemplate"></select>
+                    <span class="form-section-hint">Which invoice layout is used when printing. Independent of paper size below.</span>
+                  </div>
+                  <div class="field-group">
+                    <label for="ps-invoicePaperSize">Invoice Paper Size</label>
+                    <select id="ps-invoicePaperSize" name="invoicePaperSize"></select>
+                  </div>
+                  <div class="field-group">
+                    <label for="ps-printerName">Printer Selection</label>
+                    <select id="ps-printerName" name="printerName"></select>
+                    <span class="field-error-text" id="ps-printerName-hint"></span>
+                  </div>
+                  <div class="field-group">
+                    <label for="ps-headerMessage">Header Message</label>
+                    <input type="text" id="ps-headerMessage" name="headerMessage" maxlength="300" />
+                  </div>
+                  <div class="field-group">
+                    <label for="ps-footerMessage">Footer Message</label>
+                    <input type="text" id="ps-footerMessage" name="footerMessage" maxlength="300" />
+                  </div>
+                  <div class="field-group" style="grid-column: 1 / -1;">
+                    <label for="ps-termsAndConditions">Terms &amp; Conditions</label>
+                    <textarea id="ps-termsAndConditions" name="termsAndConditions" rows="4" placeholder="One term per line, e.g.&#10;Goods once sold will not be taken back.&#10;Warranty as per company policy."></textarea>
+                    <span class="form-section-hint">Shown as a numbered list on invoices. One line per term. Leave blank to hide this section.</span>
+                  </div>
+                  <div class="field-group" style="grid-column: 1 / -1;">
+                    <label for="ps-notes">Notes</label>
+                    <textarea id="ps-notes" name="notes" rows="2" maxlength="500" placeholder="Optional internal note shown on every invoice, e.g. Visit again."></textarea>
+                    <span class="form-section-hint">Optional. Leave blank to hide this section.</span>
+                  </div>
+                  <div class="field-group">
+                    <label class="toggle-row"><input type="checkbox" id="ps-printPreviewEnabled" name="printPreviewEnabled" /> Print Preview On</label>
+                  </div>
+                  <div class="field-group">
+                    <label class="toggle-row"><input type="checkbox" id="ps-autoPrintEnabled" name="autoPrintEnabled" /> Auto Print On</label>
+                  </div>
+                </div>
+                <p class="form-error" id="ps-form-error" role="alert"></p>
+                <div class="settings-form-actions">
+                  <button type="submit" class="btn-primary" id="ps-submit"><span id="ps-submit-text">Save Print Settings</span></button>
+                </div>
+              </form>
+            </section>
+
+            <!-- Security Settings -->
+            <section class="settings-panel" id="panel-security">
+              <div class="settings-panel-header">
+                <h2 class="settings-panel-title">Security Settings</h2>
+                <p class="settings-panel-subtitle">Applied automatically to authentication across the system.</p>
+              </div>
+              <form id="security-settings-form" class="settings-form" novalidate>
+                <div class="form-grid">
+                  <div class="field-group">
+                    <label for="ss-sessionTimeoutMinutes">Session Timeout (minutes)</label>
+                    <input type="number" id="ss-sessionTimeoutMinutes" name="sessionTimeoutMinutes" min="5" max="1440" step="1" />
+                  </div>
+                  <div class="field-group">
+                    <label for="ss-passwordMinLength">Password Minimum Length</label>
+                    <input type="number" id="ss-passwordMinLength" name="passwordMinLength" min="6" max="64" step="1" />
+                  </div>
+                  <div class="field-group">
+                    <label for="ss-loginAttemptLimit">Login Attempt Limit</label>
+                    <input type="number" id="ss-loginAttemptLimit" name="loginAttemptLimit" min="3" max="20" step="1" />
+                  </div>
+                  <div class="field-group">
+                    <label class="toggle-row"><input type="checkbox" id="ss-forcePasswordChange" name="forcePasswordChange" /> Force Password Change on Next Login</label>
+                  </div>
+                </div>
+                <p class="form-error" id="ss-form-error" role="alert"></p>
+                <div class="settings-form-actions">
+                  <button type="submit" class="btn-primary" id="ss-submit"><span id="ss-submit-text">Save Security Settings</span></button>
+                </div>
+              </form>
+            </section>
+
+            <!-- Application Settings -->
+            <section class="settings-panel" id="panel-application">
+              <div class="settings-panel-header">
+                <h2 class="settings-panel-title">Application Settings</h2>
+                <p class="settings-panel-subtitle">Currency, date, and time preferences used throughout the system.</p>
+              </div>
+              <form id="app-settings-form" class="settings-form" novalidate>
+                <div class="form-grid">
+                  <div class="field-group">
+                    <label for="as-currency">Currency</label>
+                    <select id="as-currency" name="currency"></select>
+                  </div>
+                  <div class="field-group">
+                    <label for="as-currencySymbol">Currency Symbol</label>
+                    <input type="text" id="as-currencySymbol" name="currencySymbol" maxlength="5" />
+                  </div>
+                  <div class="field-group">
+                    <label for="as-decimalPlaces">Decimal Places</label>
+                    <input type="number" id="as-decimalPlaces" name="decimalPlaces" min="0" max="4" step="1" />
+                  </div>
+                  <div class="field-group">
+                    <label for="as-dateFormat">Date Format</label>
+                    <select id="as-dateFormat" name="dateFormat"></select>
+                  </div>
+                  <div class="field-group">
+                    <label for="as-timeFormat">Time Format</label>
+                    <select id="as-timeFormat" name="timeFormat"></select>
+                  </div>
+                  <div class="field-group">
+                    <label for="as-timeZone">Time Zone</label>
+                    <input type="text" id="as-timeZone" name="timeZone" maxlength="100" placeholder="e.g. Asia/Kolkata" />
+                  </div>
+                  <div class="field-group">
+                    <label for="as-defaultLanguage">Default Language</label>
+                    <input type="text" id="as-defaultLanguage" name="defaultLanguage" maxlength="50" />
+                  </div>
+                </div>
+                <p class="form-error" id="as-form-error" role="alert"></p>
+                <div class="settings-form-actions">
+                  <button type="submit" class="btn-primary" id="as-submit"><span id="as-submit-text">Save Application Settings</span></button>
+                </div>
+              </form>
+            </section>
+
+            <!-- Database Information -->
+            <section class="settings-panel" id="panel-database">
+              <div class="settings-panel-header">
+                <h2 class="settings-panel-title">Database Information</h2>
+                <p class="settings-panel-subtitle">Read-only system information.</p>
+              </div>
+              <div class="info-grid" id="database-info-grid">
+                <div class="table-state" id="database-loading-state"><p>Loading database information...</p></div>
+              </div>
+            </section>
+
+            <!-- About -->
+            <section class="settings-panel" id="panel-about">
+              <div class="settings-panel-header">
+                <h2 class="settings-panel-title">About</h2>
+                <p class="settings-panel-subtitle">System information.</p>
+              </div>
+              <div class="info-grid" id="about-info-grid">
+                <div class="table-state" id="about-loading-state"><p>Loading system information...</p></div>
+              </div>
+            </section>
+
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add/Edit User Modal -->
+  <div class="modal-overlay" id="user-modal-overlay" hidden>
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="user-modal-title">
+      <div class="modal-header">
+        <h2 class="modal-title" id="user-modal-title">Add User</h2>
+        <button type="button" class="modal-close" id="user-modal-close" aria-label="Close">✕</button>
+      </div>
+      <form id="user-form" class="modal-form" novalidate>
+        <div class="modal-body">
+          <div class="field-group">
+            <label for="user-field-fullName">Full Name <span class="required-mark">*</span></label>
+            <input type="text" id="user-field-fullName" name="fullName" maxlength="150" />
+            <span class="field-error-text" id="user-error-fullName"></span>
+          </div>
+          <div class="field-group">
+            <label for="user-field-username">Username <span class="required-mark">*</span></label>
+            <input type="text" id="user-field-username" name="username" maxlength="30" placeholder="letters, numbers, dots, underscores" />
+            <span class="field-error-text" id="user-error-username"></span>
+          </div>
+          <div class="field-group" id="user-password-group">
+            <label for="user-field-password">Password <span class="required-mark">*</span></label>
+            <input type="password" id="user-field-password" name="password" autocomplete="new-password" />
+            <span class="field-error-text" id="user-error-password"></span>
+          </div>
+          <div class="field-group">
+            <label for="user-field-role">Role <span class="required-mark">*</span></label>
+            <select id="user-field-role" name="role"></select>
+            <span class="field-error-text" id="user-error-role"></span>
+          </div>
+          <div class="field-group">
+            <label for="user-field-mobile">Mobile</label>
+            <input type="text" id="user-field-mobile" name="mobile" maxlength="10" />
+            <span class="field-error-text" id="user-error-mobile"></span>
+          </div>
+          <div class="field-group">
+            <label for="user-field-email">Email</label>
+            <input type="text" id="user-field-email" name="email" maxlength="150" />
+            <span class="field-error-text" id="user-error-email"></span>
+          </div>
+        </div>
+        <p class="form-error" id="user-form-error" role="alert"></p>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="user-modal-cancel">Cancel</button>
+          <button type="submit" class="btn-primary" id="user-modal-submit">
+            <span id="user-modal-submit-text">Save</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Reset Password Modal -->
+  <div class="modal-overlay" id="reset-password-modal-overlay" hidden>
+    <div class="modal-dialog modal-dialog-small" role="dialog" aria-modal="true" aria-labelledby="reset-password-title">
+      <div class="modal-header">
+        <h2 class="modal-title" id="reset-password-title">Reset Password</h2>
+        <button type="button" class="modal-close" id="reset-password-close" aria-label="Close">✕</button>
+      </div>
+      <form id="reset-password-form" class="modal-form" novalidate>
+        <div class="modal-body">
+          <p id="reset-password-target" class="reset-password-target"></p>
+          <div class="field-group">
+            <label for="reset-password-field">New Password <span class="required-mark">*</span></label>
+            <input type="password" id="reset-password-field" name="newPassword" autocomplete="new-password" />
+            <span class="field-error-text" id="reset-password-error-field"></span>
+          </div>
+        </div>
+        <p class="form-error" id="reset-password-form-error" role="alert"></p>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="reset-password-cancel">Cancel</button>
+          <button type="submit" class="btn-primary" id="reset-password-submit">
+            <span id="reset-password-submit-text">Reset Password</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Number Series Modal -->
+  <div class="modal-overlay" id="series-modal-overlay" hidden>
+    <div class="modal-dialog modal-dialog-small" role="dialog" aria-modal="true" aria-labelledby="series-modal-title">
+      <div class="modal-header">
+        <h2 class="modal-title" id="series-modal-title">Edit Number Series</h2>
+        <button type="button" class="modal-close" id="series-modal-close" aria-label="Close">✕</button>
+      </div>
+      <form id="series-form" class="modal-form" novalidate>
+        <div class="modal-body">
+          <div class="field-group">
+            <label for="series-field-prefix">Prefix <span class="required-mark">*</span></label>
+            <input type="text" id="series-field-prefix" name="prefix" maxlength="10" />
+            <span class="field-error-text" id="series-error-prefix"></span>
+          </div>
+          <div class="field-group">
+            <label for="series-field-startingNumber">Starting Number <span class="required-mark">*</span></label>
+            <input type="number" id="series-field-startingNumber" name="startingNumber" min="1" step="1" />
+            <span class="field-error-text" id="series-error-startingNumber"></span>
+          </div>
+          <div class="field-group">
+            <label for="series-field-numberLength">Number Length <span class="required-mark">*</span></label>
+            <input type="number" id="series-field-numberLength" name="numberLength" min="1" max="12" step="1" />
+            <span class="field-error-text" id="series-error-numberLength"></span>
+          </div>
+          <p class="current-stock-hint" id="series-preview-hint"></p>
+        </div>
+        <p class="form-error" id="series-form-error" role="alert"></p>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="series-modal-cancel">Cancel</button>
+          <button type="submit" class="btn-primary" id="series-modal-submit">
+            <span id="series-modal-submit-text">Save</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirmation Dialog -->
+  <div class="modal-overlay" id="confirm-modal-overlay" hidden>
+    <div class="modal-dialog modal-dialog-small" role="alertdialog" aria-modal="true">
+      <div class="modal-header">
+        <h2 class="modal-title" id="confirm-title">Confirm Action</h2>
+      </div>
+      <div class="modal-body">
+        <p id="confirm-message">Are you sure?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="confirm-cancel">Cancel</button>
+        <button type="button" class="btn-primary" id="confirm-ok">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="../mobileValidation.js"></script>
+  <script src="../permissions.js"></script>
+  <script src="settings.js"></script>
+</body>
+</html>
