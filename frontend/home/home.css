@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(135deg, #f5f6fb 0%, #eeecfb 100%);
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a1d1f;
+}
+
+.home-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 48px 64px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 4px 24px rgba(16, 24, 40, 0.08);
+  text-align: center;
+  min-width: 360px;
+}
+
+.home-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.home-subtitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: #667085;
+  margin-bottom: 20px;
+}
+
+.home-status {
+  font-size: 15px;
+  font-weight: 600;
+  color: #12805c;
+  margin-bottom: 28px;
+}
+
+.logout-button {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #344054;
+  background-color: #ffffff;
+  border: 1px solid #d0d5dd;
+  border-radius: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.logout-button:hover {
+  background-color: #f9fafb;
+}
