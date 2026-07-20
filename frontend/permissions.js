@@ -28,7 +28,7 @@
    names. Kept here so every page uses the same mapping.
    ============================================================ */
 
-const PERMISSIONS_API_BASE_URL = 'http://localhost:5000';
+const PERMISSIONS_API_BASE_URL = 'https://electronicerp-1.onrender.com';
 
 const NAV_TO_MODULE = {
   dashboard: 'Dashboard',
